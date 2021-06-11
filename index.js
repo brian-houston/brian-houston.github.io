@@ -143,9 +143,9 @@ const draw = regl({
 
 let frameCount = 0;
 regl.frame(() => {
-    if (frameCount % 3 === 0) {
+    if (frameCount % 5 === 0) {
         draw({
-            time: frameCount/(3 * 120), 
+            time: frameCount/(5 * 240), 
         });
     }
 
