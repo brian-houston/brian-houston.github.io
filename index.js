@@ -5,10 +5,10 @@ let pattern = `
     vec2 r = vec2(fbm(p + 2.0 * q + vec2(1.7, 9.2)), fbm(p + 2.0 * q + vec2(8.3, 2.8)));
     float s = fbm(p + r + vec2(21.1, 83.4));
 
-    vec3 c1 = vec3(0.00, 0.0760, 0.570);
+    vec3 c1 = vec3(0.000, 0.000, 0.700);
     vec3 c2 = vec3(0.540, 0.740, 0.723);
-    vec3 c3 = vec3(0.620, 0.365, 0.0744);
-    vec3 c4 = vec3(0.760, 0.509, 0.426);
+    vec3 c3 = vec3(0.620, 0.365, 0.000);
+    vec3 c4 = vec3(0.660, 0.509, 0.426);
 
     vec3 m1 = mix(c2, c1, s);
     vec3 m2 = mix(c3, m1, length(q));
