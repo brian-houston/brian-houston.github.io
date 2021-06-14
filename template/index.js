@@ -141,7 +141,7 @@ const draw = regl({
     count: 6
 })
 
-let frameCount = sessionStorage.getItem("frameCount") || 0; 
+let frameCount = sessionStorage.getItem("frameCount") || 0;
 regl.frame(() => {
     if (frameCount % 5 === 0) {
         draw({
@@ -155,4 +155,3 @@ regl.frame(() => {
 window.onbeforeunload = function() {
     sessionStorage.setItem("frameCount", frameCount);
 }
-

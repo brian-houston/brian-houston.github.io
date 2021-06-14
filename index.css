@@ -6,6 +6,11 @@
     transform: translate(-50%, -50%);
 }
 
-.title-container button {
-    width: 250px;
+.btn {
+    width: max-content;
+    border-radius: 0 !important;
+}
+
+h1 {
+    width: max-content !important;
 }
