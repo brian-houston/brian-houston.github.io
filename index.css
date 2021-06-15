@@ -5,12 +5,3 @@
     top: 50%;
     transform: translate(-50%, -50%);
 }
-
-.btn {
-    width: max-content;
-    border-radius: 0 !important;
-}
-
-h1 {
-    width: max-content !important;
-}
