@@ -69,7 +69,7 @@ let frag = `
     }
 
     void main() {
-        vec2 pos = gl_FragCoord.xy - resolution.xy;
+        vec2 pos = gl_FragCoord.xy - resolution.xy/2.0;
         vec2 circle = normalize(pos) * 0.6;
 
         float len = length(pos);
@@ -112,7 +112,7 @@ const draw = regl({
 
     uniforms: {
         time: regl.prop('time'),
-        resolution: () => [window.innerWidth, window.innerHeight],
+        resolution: () => [window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio],
     },
 
     count: 6
