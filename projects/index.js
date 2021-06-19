@@ -3,7 +3,7 @@ import metadata from "./metadata.js";
 document.querySelector("canvas").style.position = "fixed";
 let container = document.querySelector(".projects-container");
 
-metadata.sort((a,b) => a.sortWeight - b.sortWeight);
+metadata.sort((a,b) => b.sortWeight - a.sortWeight);
 
 metadata.forEach(d => {
     let html = `

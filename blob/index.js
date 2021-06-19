@@ -1,27 +1,9 @@
-const regl = createREGL({
-    attributes: {antialias: false, failIfMajorPerformanceCaveat: true},
-});
-
-let pattern = `
-    vec2 q = vec2(fbm(p + vec2(0.0, 0.0)), fbm(p + vec2(5.2, 1.3)));
-    vec2 r = vec2(fbm(p + 2.0 * q + vec2(1.7, 9.2)), fbm(p + 2.0 * q + vec2(8.3, 2.8)));
-    float s = fbm(p + r + vec2(21.1, 83.4));
-
-    vec3 c1 = vec3(0.000, 0.000, 0.800);
-    vec3 c2 = vec3(0.540, 0.900, 0.800);
-    vec3 c3 = vec3(0.500, 0.200, 0.000);
-    vec3 c4 = vec3(1.000, 0.809, 0.626);
-
-    vec3 m1 = mix(c2, c1, s);
-    vec3 m2 = mix(c3, m1, length(q));
-    vec3 m3 = mix(m2, c4, r.x);
-
-    return m3;
-    `
+const regl = createREGL();
 
 let frag = `
     precision mediump float;
     uniform float time;
+    uniform vec2 resolution;
 
     vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
     vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
@@ -83,34 +65,26 @@ let frag = `
 
       vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
       m = m * m;
-      return (42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) ) + 1.0)/2.0;
-    }
-
-    float onoise(vec3 v) {
-      float sum = 0.0;
-      float frequency = 1.0;
-      float amplitude = 1.0;
-      float max = 0.0;
-      for (int i = 0; i < 5; i++) {
-        sum += snoise(v * frequency) * amplitude;
-        max += amplitude;
-        amplitude *= 0.5;
-        frequency *= 2.0;
-      }
-      return sum/max;
-    }
-
-    float fbm(vec2 p) {
-      return onoise(vec3(p, time));
-    }
-
-    vec3 pattern(vec2 p) {
-        ${pattern}
+      return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
     }
 
     void main() {
-      gl_FragColor = vec4(pattern(gl_FragCoord.xy * 0.001), 1.0);
-    }`;
+        vec2 pos = gl_FragCoord.xy - resolution.xy;
+        vec2 circle = normalize(pos) * 0.6;
+
+        float len = length(pos);
+        float r1 = 250.0 + snoise(vec3(circle, time)) * 100.0;
+        float r2 = 350.0 + snoise(vec3(circle, time + 50000.0)) * 200.0;
+        float r3 = 450.0 + snoise(vec3(circle, time + 100000.0)) * 200.0;
+        float r4 = 550.0 + snoise(vec3(circle, time + 150000.0)) * 200.0;
+
+        float count = step(r1, len) + step(r2, len) + step(r3, len) + step(r4, len);
+
+        vec3 c1 = vec3(0.0, 0.0, 0.0);
+        vec3 c2 = vec3(1.0, 1.0, 1.0);
+
+        gl_FragColor = vec4(mix(c2, c1, count/4.0), 1.0);
+}`;
 
 let vert = `
     precision mediump float;
@@ -118,7 +92,7 @@ let vert = `
 
     void main() {
       gl_Position = vec4(position.x, position.y, 0, 1);
-    }`;
+}`;
 
 const draw = regl({
     frag: frag, 
@@ -138,23 +112,15 @@ const draw = regl({
 
     uniforms: {
         time: regl.prop('time'),
+        resolution: () => [window.innerWidth, window.innerHeight],
     },
 
     count: 6
 })
 
-let frameCount = sessionStorage.getItem("frameCount") || 0; 
+let time = 0;
 regl.frame(() => {
-    if (frameCount % 5 === 0) {
-        draw({
-            time: frameCount/(5 * 240), 
-        });
-    }
+    draw({time: time * 0.01});
 
-    frameCount++;
+    time++;
 });
-
-window.onbeforeunload = function() {
-    sessionStorage.setItem("frameCount", frameCount);
-}
-
