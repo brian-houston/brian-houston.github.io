@@ -1,22 +1,10 @@
-let canvas = document.createElement("canvas");
-let width = window.innerWidth;
-let height = window.innerHeight;
-let dpr = window.devicePixelRatio;
 
-canvas.style.width = "100%";
-canvas.style.height = "100%";
-canvas.style.position = "fixed";
-
-canvas.width = dpr * width * 2;
-canvas.height = dpr * height * 2;
-
-document.body.appendChild(canvas);
-
-const regl = createREGL(canvas);
+const regl = createREGL();
 
 let frag = `
     precision mediump float;
     uniform vec2 seed;
+    uniform float dpr;
 
     vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
     vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
@@ -97,7 +85,7 @@ let frag = `
 
     void main() {
         float v = 0.0;
-        vec3 pos = vec3(seed + gl_FragCoord.xy * 0.0004, 0.0);
+        vec3 pos = vec3(seed + gl_FragCoord.xy/dpr/500.0, 0.0);
         for (int i = 0; i < 8; i++) {
             float x = fract(onoise(pos) + 0.04 * (float(i) - 0.0));
             v += float(i+1) * step(0.49, x) * step(-0.51, -x);
@@ -134,6 +122,7 @@ const draw = regl({
 
     uniforms: {
         seed: () => [Math.random() * 10 ** 3, Math.random() * 10 ** 3],
+        dpr: window.devicePixelRatio,
     },
 
     count: 6
