@@ -13,6 +13,14 @@ const metadata = [
         thumbnail: "thumbnails/blob.jpg",
         address: "/blob",
         sortWeight: 200,
+    },
+
+    {
+        name: "Topography",
+        description: "Generating an image that resembles a topographical map",
+        thumbnail: "thumbnails/topography.jpg",
+        address: "/topography",
+        sortWeight: 300,
     }
 ]
 
