@@ -4,6 +4,7 @@ let frag = `
     precision mediump float;
     uniform float time;
     uniform vec2 resolution;
+    uniform float dpr;
 
     vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
     vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
@@ -73,10 +74,10 @@ let frag = `
         vec2 circle = normalize(pos) * 0.6;
 
         float len = length(pos);
-        float r1 = 250.0 + snoise(vec3(circle, time)) * 100.0;
-        float r2 = 350.0 + snoise(vec3(circle, time + 50000.0)) * 200.0;
-        float r3 = 450.0 + snoise(vec3(circle, time + 100000.0)) * 200.0;
-        float r4 = 550.0 + snoise(vec3(circle, time + 150000.0)) * 200.0;
+        float r1 = (125.0 + snoise(vec3(circle, time)) * 50.0) * dpr;
+        float r2 = (175.0 + snoise(vec3(circle, time + 50000.0)) * 100.0) * dpr;
+        float r3 = (225.0 + snoise(vec3(circle, time + 100000.0)) * 100.0) * dpr;
+        float r4 = (275.0 + snoise(vec3(circle, time + 150000.0)) * 100.0) * dpr;
 
         float count = step(r1, len) + step(r2, len) + step(r3, len) + step(r4, len);
 
@@ -113,10 +114,13 @@ const draw = regl({
     uniforms: {
         time: regl.prop('time'),
         resolution: () => [window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio],
+        dpr: window.devicePixelRatio,
     },
 
     count: 6
 })
+
+console.log(window.devicePixelRatio);
 
 let time = 0;
 regl.frame(() => {

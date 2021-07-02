@@ -1,4 +1,3 @@
-
 const regl = createREGL();
 
 let frag = `
