@@ -21,6 +21,14 @@ const metadata = [
         thumbnail: "thumbnails/topography.jpg",
         address: "/topography",
         sortWeight: 300,
+    },
+
+    {
+        name: "Presidential Election Shifts",
+        description: "Visualizing the shifts in voting at a county level",
+        thumbnail: "thumbnails/president.jpg",
+        address: "https://observablehq.com/@brian-houston/presidential-election-shifts-2000-2020",
+        sortWeight: 400,
     }
 ]
 

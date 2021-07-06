@@ -112,7 +112,7 @@ const draw = regl({
     },
 
     uniforms: {
-        time: regl.prop('time'),
+        time: ({tick}) => tick * 0.01,
         resolution: () => [window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio],
         dpr: window.devicePixelRatio,
     },
@@ -120,11 +120,6 @@ const draw = regl({
     count: 6
 })
 
-console.log(window.devicePixelRatio);
-
-let time = 0;
 regl.frame(() => {
-    draw({time: time * 0.01});
-
-    time++;
+    draw();
 });
