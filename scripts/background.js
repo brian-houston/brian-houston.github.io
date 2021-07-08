@@ -110,7 +110,7 @@ let frag = `
     }
 
     void main() {
-      gl_FragColor = vec4(pattern(gl_FragCoord.xy * 0.0005 * dpr), 1.0);
+      gl_FragColor = vec4(pattern(gl_FragCoord.xy * 0.002 / dpr), 1.0);
     }`;
 
 let vert = `
