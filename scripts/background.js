@@ -22,6 +22,7 @@ let pattern = `
 let frag = `
     precision mediump float;
     uniform float time;
+    uniform float dpr;
 
     vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
     vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
@@ -109,7 +110,7 @@ let frag = `
     }
 
     void main() {
-      gl_FragColor = vec4(pattern(gl_FragCoord.xy * 0.001), 1.0);
+      gl_FragColor = vec4(pattern(gl_FragCoord.xy * 0.0005 * dpr), 1.0);
     }`;
 
 let vert = `
@@ -138,6 +139,7 @@ const draw = regl({
 
     uniforms: {
         time: regl.prop('time'),
+        dpr: window.devicePixelRatio,
     },
 
     count: 6
