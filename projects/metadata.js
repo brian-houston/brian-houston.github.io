@@ -29,6 +29,14 @@ const metadata = [
         thumbnail: "thumbnails/president.jpg",
         address: "https://observablehq.com/@brian-houston/presidential-election-shifts-2000-2020",
         sortWeight: 400,
+    },
+
+    {
+        name: "Etch-A-Sketch",
+        description: "Lines grow from lines and change color",
+        thumbnail: "thumbnails/etch.jpg",
+        address: "/etch",
+        sortWeight: 600,
     }
 ]
 
