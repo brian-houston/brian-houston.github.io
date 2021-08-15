@@ -13,10 +13,12 @@ let initialData = (new Float32Array(size * 4)).fill().map(() => 0);
  *  4: left
 */
 
-initialData[2 * size - 4] = Math.random();
-initialData[2 * size - 3] = Math.random();
-initialData[2 * size - 2] = Math.random();
-initialData[2 * size - 1] = 4;
+let dpr = window.devicePixelRatio;
+
+initialData[dpr * size - 4] = Math.random();
+initialData[dpr * size - 3] = Math.random();
+initialData[dpr * size - 2] = Math.random();
+initialData[dpr * size - 1] = 4;
 
 const state = (Array(2)).fill().map(() => {
     return regl.framebuffer({
