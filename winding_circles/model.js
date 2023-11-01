@@ -1,5 +1,3 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-
 export function createCircle(radius, frequency) {
   return {
     type: "circle",
@@ -15,33 +13,49 @@ function processOperation(op, mtx, t) {
   } 
 }
 
-function addOperation(arr, ...args) {
-  let op = null;
+function createOperation(...args) {
   if (args[0] == 'circle') {
-    op = createCircle(args[1], args[2]);
+    return createCircle(args[1], args[2]);
   } 
 
-  if (op) {
-    arr.push(op);
-  }
+  return createCircle(0, 0);
 }
 
 export function drawCircles(ops, colors, ctx, width, height) {
+  if (ops.length == 0) {
+    return;
+  }
+
   ctx.fillStyle = "white";
   ctx.rect(0, 0, width, height);
   ctx.fill();
   let pts = [];
+  let maxDistSq = 0;
   for (let t = 0; t < 360; t += 0.1) {
     let mtx = new DOMMatrix();
-    mtx.translateSelf(width/2, height/2);
     for (let op of ops) {
       processOperation(op, mtx, t);
     }
 
     let pt = new DOMPoint(0, 0);
     pt = pt.matrixTransform(mtx);
+    let distSq = pt.x * pt.x + pt.y * pt.y;
+    if (distSq > maxDistSq) {
+      maxDistSq = distSq;
+    }
     pts.push(pt)
   }
+
+  let maxDist = Math.sqrt(maxDistSq);
+  let factor = Math.min(width, height) / maxDist / 2;
+
+  // scale to fit canvas
+  // and translate to center
+  let mtx = new DOMMatrix();
+  mtx.translateSelf(width/2, height/2);
+  mtx.scaleSelf(factor);
+
+  pts = pts.map(p => p.matrixTransform(mtx));
 
   let pixels = ctx.getImageData(0, 0, width, height);
   windingDraw(pts, pixels.data, colors, width, height);
