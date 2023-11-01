@@ -16,6 +16,11 @@ const height = canvas.height;
 function updateColors() {
   let schemeText = schemeInput.value;
   let scheme = schemeText.trim();
+  let reverse = false;
+  if (scheme.slice(-1) == 'R') {
+    reverse = true;
+    scheme = scheme.slice(0, -1);
+  }
   if (!(`interpolate${scheme}` in d3)) {
     scheme = "Rainbow";
   }
@@ -25,14 +30,14 @@ function updateColors() {
 
   colors = [];
   for (let i = 0; i < ncolors; i++) {
-    let c = d3[`interpolate${scheme}`](i/(ncolors-1))
+    let t = reverse ? 1 - i/(ncolors-1) : i/(ncolors-1);
+    let c = d3[`interpolate${scheme}`](t);
     c = d3.color(c);
     c = [c.r, c.g, c.b, 255];
     colors.push(c);
   }
 
   model.drawCircles(ops, colors, ctx, width, height);
-  console.log(colors);
 }
 
 function updateOps() {
@@ -44,9 +49,15 @@ function updateOps() {
     .map(d => model.createCircle(d[0] || 0, d[1] || 0));
 
   model.drawCircles(ops, colors, ctx, width, height);
-  console.log(ops);
 }
 
 opsInput.addEventListener('change', updateOps); 
 schemeInput.addEventListener('change', updateColors); 
 ncolorsInput.addEventListener('change', updateColors); 
+
+opsInput.value = "100 1\n-110 10\n-10 50";
+schemeInput.value = "Cool";
+ncolorsInput.value = "12";
+
+updateColors();
+updateOps();
