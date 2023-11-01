@@ -7,20 +7,28 @@
   <style> 
     textarea {
       resize: none;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
     }
   </style>
 </head>
 
 <body>
+  <h1>Winding Circles</h1>
   <div>
-    <canvas width="500px" height="500px" id="canvas"></canvas>
+    <canvas width="600px" height="600px" id="canvas"></canvas>
   </div>
   
-  <p>Operations</p>
+  <label for="ops">Operations</label>
   <textarea id="ops" rows="6"></textarea>
-  <p>Color Scheme</p>
+
+  <label for="scheme">Color Scheme (<a target="_blank" href="https://observablehq.com/@d3/color-schemes">List</a>)</label>
   <textarea id="scheme" rows="1"></textarea>
-  <p>Number of Colors</p>
+
+  <label for="ncolors">Number of Colors</label>
   <textarea id="ncolors" rows="1"></textarea>
   <script src="winding_draw.js"></script>
   <script src="control.js" type="module"></script>
