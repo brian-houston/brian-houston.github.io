@@ -45,9 +45,9 @@ function updateOps() {
   ops = opsText.split("\n")
     .map(d => d.trim())
     .map(d => d.split(" "))
-    .map(d => d.map(dd => parseInt(dd) || 0))
-    .map(d => model.createCircle(d[0] || 0, d[1] || 0));
+    .map(d => model.createOperation(...d));
 
+  console.log(ops);
   model.drawCircles(ops, colors, ctx, width, height);
 }
 

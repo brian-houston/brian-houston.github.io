@@ -6,17 +6,30 @@ export function createCircle(radius, frequency) {
   }
 }
 
+export function createLine(magnitude, frequency) { 
+  return {
+    type: "line",
+    magnitude: magnitude,
+    frequency: frequency
+  }
+}
+
 function processOperation(op, mtx, t) {
   if (op.type == 'circle') {
     mtx.rotateSelf(t * op.frequency)
     mtx.translateSelf(op.radius)
-  } 
+  } else if (op.type == 'line') {
+    let factor = 1 + op.magnitude *  Math.sin(Math.PI * t / 180 * op.frequency);
+    mtx.scaleSelf(factor);
+  }
 }
 
-function createOperation(...args) {
-  if (args[0] == 'circle') {
-    return createCircle(args[1], args[2]);
-  } 
+export function createOperation(...args) {
+  if (args[0] == 'C') {
+    return createCircle(parseInt(args[1]) || 0, parseInt(args[2]) || 0);
+  } else if (args[0] == 'L') {
+    return createLine(parseFloat(args[1]) || 0, parseInt(args[2]) || 0);
+  }
 
   return createCircle(0, 0);
 }
@@ -47,6 +60,7 @@ export function drawCircles(ops, colors, ctx, width, height) {
   }
 
   let maxDist = Math.sqrt(maxDistSq);
+  if (maxDist < 1) { return; }
   let factor = Math.min(width, height) / maxDist / 2;
 
   // scale to fit canvas
