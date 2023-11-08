@@ -7,6 +7,7 @@ let ops = [];
 const opsInput = document.getElementById('ops');
 const schemeInput = document.getElementById('scheme');
 const ncolorsInput = document.getElementById('ncolors');
+const downloadButton = document.getElementById('download');
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -51,9 +52,27 @@ function updateOps() {
   model.drawOperations(ops, colors, ctx, width, height);
 }
 
+async function download() {
+  let osCanvas = new OffscreenCanvas(4000, 4000);
+  let osCtx = osCanvas.getContext('2d'); 
+  model.drawOperations(ops, colors, osCtx, 4000, 4000);
+
+  let blob = await osCanvas.convertToBlob();
+  let url = window.URL.createObjectURL(blob);
+
+  let anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = "wc.png";
+  anchor.click();
+
+  window.URL.revokeObjectURL(url);
+  anchor.remove();
+}
+
 opsInput.addEventListener('change', updateOps); 
 schemeInput.addEventListener('change', updateColors); 
 ncolorsInput.addEventListener('change', updateColors); 
+downloadButton.addEventListener("click", download);
 
 opsInput.value = "C 1 100\nC 10 -110\nC 50 -10";
 schemeInput.value = "Cool";
