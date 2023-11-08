@@ -37,25 +37,25 @@ function updateColors() {
     colors.push(c);
   }
 
-  model.drawCircles(ops, colors, ctx, width, height);
+  model.drawOperations(ops, colors, ctx, width, height);
 }
 
 function updateOps() {
   let opsText = opsInput.value;
   ops = opsText.split("\n")
     .map(d => d.trim())
+    .filter(d => d.slice(0,1) != '#')
     .map(d => d.split(" "))
     .map(d => model.createOperation(...d));
 
-  console.log(ops);
-  model.drawCircles(ops, colors, ctx, width, height);
+  model.drawOperations(ops, colors, ctx, width, height);
 }
 
 opsInput.addEventListener('change', updateOps); 
 schemeInput.addEventListener('change', updateColors); 
 ncolorsInput.addEventListener('change', updateColors); 
 
-opsInput.value = "100 1\n-110 10\n-10 50";
+opsInput.value = "C 1 100\nC 10 -110\nC 50 -10";
 schemeInput.value = "Cool";
 ncolorsInput.value = "12";
 

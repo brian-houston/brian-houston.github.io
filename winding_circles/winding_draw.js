@@ -61,7 +61,7 @@ function getIndex(x, y, width) {
   return x + y * width;
 }
 
-function windingDraw(points, pixels, colors, width, height) {
+export function windingDraw(points, pixels, colors, width, height) {
   if (points.length < 3) {
     return;
   }
@@ -98,8 +98,8 @@ function windingDraw(points, pixels, colors, width, height) {
       right_eval = e.currX;
       e.increment();
       
-      left = clamp(Math.round(left_eval), 0, width);
-      right = clamp(Math.round(right_eval), 0, width);
+      let left = clamp(Math.round(left_eval), 0, width);
+      let right = clamp(Math.round(right_eval), 0, width);
       if (left < right) {
         let colorIndex = Math.min(Math.abs(winding)-1, colors.length-1);
         paintRow(getIndex(left, y, width), right - left, colors[colorIndex], pixels);

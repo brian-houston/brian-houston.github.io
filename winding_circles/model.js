@@ -1,50 +1,78 @@
-export function createCircle(radius, frequency) {
+import {windingDraw} from "./winding_draw.js";
+
+function createCircle(frequency, radius, phase) {
   return {
     type: "circle",
+    frequency: frequency,
     radius: radius,
-    frequency: frequency
+    phase: phase,
   }
 }
 
-export function createLine(magnitude, frequency) { 
+function createScale(frequency, midpoint, magnitude, phase) {
   return {
-    type: "line",
+    type: "scale",
+    frequency: frequency,
     magnitude: magnitude,
-    frequency: frequency
+    midpoint: midpoint,
+    phase: phase,
+  }
+}
+
+function createRotation(frequency, midpoint, magnitude, phase) {
+  return {
+    type: "rotation",
+    frequency: frequency,
+    magnitude: magnitude,
+    midpoint: midpoint,
+    phase: phase,
   }
 }
 
 function processOperation(op, mtx, t) {
   if (op.type == 'circle') {
-    mtx.rotateSelf(t * op.frequency)
+    mtx.rotateSelf(t * op.frequency + op.phase * 360 / op.frequency)
     mtx.translateSelf(op.radius)
-  } else if (op.type == 'line') {
-    let factor = 1 + op.magnitude *  Math.sin(Math.PI * t / 180 * op.frequency);
+  } else if (op.type == 'scale') {
+    let factor = op.midpoint + op.magnitude *  Math.sin(Math.PI * t / 180 * op.frequency + 2*Math.PI * op.phase / op.frequency);
     mtx.scaleSelf(factor);
+  } else if (op.type == 'rotation') {
+    mtx.rotateSelf(op.midpoint + op.magnitude * Math.sin(Math.PI * t / 180 * op.frequency + 2*Math.PI * op.phase / op.frequency));
   }
 }
 
 export function createOperation(...args) {
-  if (args[0] == 'C') {
-    return createCircle(parseInt(args[1]) || 0, parseInt(args[2]) || 0);
-  } else if (args[0] == 'L') {
-    return createLine(parseFloat(args[1]) || 0, parseInt(args[2]) || 0);
+  if (args.length == 0) {
+    return null; 
   }
 
-  return createCircle(0, 0);
+  args[0] = args[0].toUpperCase();
+  
+  if (args[0] == 'C') {
+    return createCircle(parseInt(args[1]) || 0, parseInt(args[2]) || 0, parseFloat(args[3]) || 0);
+  } else if (args[0] == 'S') {
+    return createScale(parseInt(args[1]) || 0, parseFloat(args[2]) || 0, parseFloat(args[3]) || 0, parseFloat(args[4]) || 0);
+  } else if (args[0] == 'R') {
+    return createRotation(parseInt(args[1]) || 0, parseFloat(args[2]) || 0, parseFloat(args[3]) || 0, parseFloat(args[4]) || 0);
+  }
+
+  return null;
 }
 
-export function drawCircles(ops, colors, ctx, width, height) {
+export function drawOperations(ops, colors, ctx, width, height) {
+  ctx.fillStyle = "white";
+  ctx.rect(0, 0, width, height);
+  ctx.fill();
+
+  ops = ops.filter(d => d != null);
+
   if (ops.length == 0) {
     return;
   }
 
-  ctx.fillStyle = "white";
-  ctx.rect(0, 0, width, height);
-  ctx.fill();
   let pts = [];
   let maxDistSq = 0;
-  for (let t = 0; t < 360; t += 0.1) {
+  for (let t = 0; t < 360; t += 0.05) {
     let mtx = new DOMMatrix();
     for (let op of ops) {
       processOperation(op, mtx, t);
