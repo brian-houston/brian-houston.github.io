@@ -59,7 +59,7 @@ export function createOperation(...args) {
   return null;
 }
 
-export function drawOperations(ops, colors, ctx, width, height) {
+export function drawOperations(ops, colors, ctx, width, height, numEdges = 7200) {
   ctx.fillStyle = "white";
   ctx.rect(0, 0, width, height);
   ctx.fill();
@@ -72,7 +72,8 @@ export function drawOperations(ops, colors, ctx, width, height) {
 
   let pts = [];
   let maxDistSq = 0;
-  for (let t = 0; t < 360; t += 0.05) {
+  let incr = 360 / numEdges;
+  for (let t = 0; t < 360; t += incr) {
     let mtx = new DOMMatrix();
     for (let op of ops) {
       processOperation(op, mtx, t);

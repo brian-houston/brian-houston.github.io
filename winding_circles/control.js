@@ -9,6 +9,7 @@ const schemeInput = document.getElementById('scheme');
 const ncolorsInput = document.getElementById('ncolors');
 const downloadButton = document.getElementById('download');
 const downloadSizeInput = document.getElementById('download_size');
+const downloadEdgesInput = document.getElementById('download_edges');
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -56,10 +57,15 @@ function updateOps() {
 async function download() {
   let downloadSizeText = downloadSizeInput.value.trim();
   let size = parseInt(downloadSizeText) || width;
+  size = Math.min(size, 8192);
+
+  let downloadEdgesText = downloadEdgesInput.value.trim();
+  let edges = parseInt(downloadEdgesText) || 7200;
+  edges = Math.min(edges, 1000000);
   
   let osCanvas = new OffscreenCanvas(size, size);
   let osCtx = osCanvas.getContext('2d'); 
-  model.drawOperations(ops, colors, osCtx, size, size);
+  model.drawOperations(ops, colors, osCtx, size, size, edges);
 
   let blob = await osCanvas.convertToBlob();
   let url = window.URL.createObjectURL(blob);
