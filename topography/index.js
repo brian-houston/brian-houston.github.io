@@ -129,6 +129,6 @@ const draw = regl({
 
 draw();
 
-document.querySelector(".regen-btn").onclick = () => {
+document.querySelector("#regen").onclick = () => {
     draw();
 }
