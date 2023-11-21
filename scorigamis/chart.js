@@ -194,4 +194,4 @@ svg.append(() => colorLegend.node())
   .select('g')
     .attr('font-family', 'monospace')
 
-document.body.append(svg.node());
+document.body.prepend(svg.node());
