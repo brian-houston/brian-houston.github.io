@@ -1,4 +1,5 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import "../libraries/d3.v7.min.js";
+import {Legend} from "../libraries/legend.js";
 let dataURL = "https://gist.githubusercontent.com/brian-houston/d13e40b76d06097e91e424ac56b81310/raw/660f88528c5ce513e572b2bc20105562009af159/538_nfl.csv";
 let dataURL2 = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv";
 
@@ -51,7 +52,7 @@ const xScale = d3.scaleBand(d3.range(0, maxMax + 1), [margins.left, width - marg
 const yScale = d3.scaleBand(d3.range(0, maxMin + 1), [height - margins.bottom, margins.top])
   .paddingInner(paddingInner);
 
-const colorScale = d3.scaleOrdinal(d3.range(1920, 2030, 10), d3.range(0, 11).map(d => d3.interpolateSpectral(d/10)));
+const colorScale = d3.scaleSequential(d3.extent(data.map(d => d.season)), d3.interpolateSpectral);
 
 const xAxis = d3.axisBottom(xScale)
   .tickFormat(d => d % 5 == 0 ? d : '')
@@ -97,6 +98,9 @@ svg.append('g')
   .call(yAxis)
   .attr('font-family', 'monospace');
 
+let containerWidth = 130;
+let containerHeight = 28;
+let containerYOffset = 10;
 svg.append('g')
   .selectAll('rect')
   .data(data)
@@ -105,32 +109,37 @@ svg.append('g')
   .attr('height', yScale.bandwidth())
   .attr('x', d => xScale(d.scores[1]))
   .attr('y', d => yScale(d.scores[0]))
-  .attr('fill', d => colorScale(d.decade))
+  .attr('fill', d => colorScale(d.season))
   .on('mouseover', function(e, d) {
     d3.select(this).attr('stroke', 'black');
     let container = svg.append('g')
       .attr('id', d.strScore)
 
+    let cx = xScale(d.scores[1]) + xScale.bandwidth()/2;
+    let cy = yScale(d.scores[0]) + yScale.bandwidth() + containerYOffset;
+
+    cx = Math.min(Math.max(cx, containerWidth/2 + 1), width - containerWidth/2 - 1);
+
     container.append('rect')
-      .attr('x', xScale(d.scores[1]) + xScale.bandwidth()/2 - 65)
-      .attr('y', yScale(d.scores[0]) + yScale.bandwidth() + 8)
-      .attr('width', 130)
+      .attr('x', cx - containerWidth/2)
+      .attr('y', cy)
+      .attr('width', containerWidth)
       .attr('height', 28)
       .attr('fill', 'white')
       .attr('stroke', 'black')
 
     container.append('text')
       .text(d.date)
-      .attr('x', xScale(d.scores[1]) + xScale.bandwidth()/2)
-      .attr('y', yScale(d.scores[0]) + yScale.bandwidth() + 10)
+      .attr('x', cx)
+      .attr('y', cy + 2)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'hanging')
       .attr('font-family', 'monospace')
 
     container.append('text')
       .text(`${d.team1} ${d.score1} - ${d.score2} ${d.team2}`)
-      .attr('x', xScale(d.scores[1]) + xScale.bandwidth()/2)
-      .attr('y', yScale(d.scores[0]) + yScale.bandwidth() + 24)
+      .attr('x', cx) 
+      .attr('y', cy + 16)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'hanging')
       .attr('font-family', 'monospace')
@@ -140,11 +149,13 @@ svg.append('g')
     svg.select(`#${d.strScore}`).remove();
   })
 
+let titleStartX = margins.left + 25;
+let titleStartY = margins.top + 65;
 svg.append('g')
   .append('text')
   .text('NFL Scorigamis')
-  .attr('x', margins.left + 15)
-  .attr('y', margins.top + 65)
+  .attr('x', titleStartX)
+  .attr('y', titleStartY)
   .attr('font-size', 40)
   .attr('font-family', 'monospace')
 
@@ -167,5 +178,20 @@ svg.append('g')
   .attr('font-family', 'monospace')
   .attr('text-anchor', 'middle')
   .attr('dominant-baseline', 'hanging')
+
+const colorLegend = Legend(colorScale,
+  {
+    title: 'Season',
+    tickFormat: "d",
+    width: 340
+  });
+
+
+svg.append(() => colorLegend.node())
+  .attr('x', titleStartX)
+  .attr('y', titleStartY + 30)
+  .attr('font-family', 'monospace')
+  .select('g')
+    .attr('font-family', 'monospace')
 
 document.body.append(svg.node());
