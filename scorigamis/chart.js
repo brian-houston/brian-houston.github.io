@@ -52,7 +52,8 @@ const xScale = d3.scaleBand(d3.range(0, maxMax + 1), [margins.left, width - marg
 const yScale = d3.scaleBand(d3.range(0, maxMin + 1), [height - margins.bottom, margins.top])
   .paddingInner(paddingInner);
 
-const colorScale = d3.scaleSequential(d3.extent(data.map(d => d.season)), d3.interpolateSpectral);
+let yearExtent = d3.extent(data.map(d => d.season));
+const colorScale = d3.scaleSequential(yearExtent, t => d3.color(d3.interpolateSpectral(t)).darker(0.2));
 
 const xAxis = d3.axisBottom(xScale)
   .tickFormat(d => d % 5 == 0 ? d : '')
