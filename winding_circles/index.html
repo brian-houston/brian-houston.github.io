@@ -10,6 +10,16 @@
       margin-bottom: 10px;
     }
 
+    p {
+      margin-block-start: 0;
+      margin-block-end: 0;
+    }
+
+    h2 {
+      margin-block-start: 0.8em;
+      margin-block-end: 0.2em;
+    }
+
     label, button {
       display: block;
     }
@@ -38,6 +48,22 @@
   <textarea id="download_edges" rows="1"></textarea>
 
   <button id="download" type="button">Download</button>
+
+  <h2>Reference</h2>
+  <p>Give a list operations where each operation is on one line. </p>
+  <p>Format for operations is shown below. </p>
+  <p>Rotation and scale operations follow sine function. </p>
+  <p>Offset is zero by default.</p>
+  <p>Color determined by winding number.</p>
+
+  <dl>
+    <dt>Circle Operation</dt>
+    <dd>- C (frequency) (radius) (offset)</dd>
+    <dt>Rotation Operation</dt>
+    <dd>- R (frequency) (midline) (magnitude) (offset)</dd>
+    <dt>Scale Operation</dt>
+    <dd>- S (frequency) (midline) (magnitude) (offset)</dd>
+  </dl>
 
 
   <script src="control.js" type="module"></script>
