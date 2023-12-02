@@ -46,6 +46,9 @@ let maxMax = d3.max(data.map(d => d.scores[1]));
 let height = (maxMin+1) * (width-margins.left-margins.right) / (maxMax+1) + margins.top + margins.bottom;
 let paddingInner = 0.1;
 
+let chartWidth = width - margins.left - margins.right;
+let chartHeight = height - margins.top - margins.bottom;
+
 const xScale = d3.scaleBand(d3.range(0, maxMax + 1), [margins.left, width - margins.right])
   .paddingInner(paddingInner);
 
@@ -113,7 +116,7 @@ svg.append('g')
 svg.append('g')
   .append('text')
   .text('Winning Score')
-  .attr('x', (xScale(maxMax)-xScale(0)) * 0.5)
+  .attr('x', margins.left + chartWidth * 0.5)
   .attr('y', height - 4)
   .attr('font-size', 15)
   .attr('font-family', 'monospace')
@@ -123,7 +126,7 @@ svg.append('g')
   .append('text')
   .text('Losing Score')
   .attr('transform', 'rotate(90)')
-  .attr('x', -(yScale(maxMin) - yScale(0)) * 0.5)
+  .attr('x', margins.top + chartHeight * 0.5)
   .attr('y', -width)
   .attr('font-size', 15)
   .attr('font-family', 'monospace')
