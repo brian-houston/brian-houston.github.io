@@ -1,5 +1,5 @@
 import "../libraries/d3.v7.min.js";
-let dataURL = "https://gist.githubusercontent.com/brian-houston/7ffd597a65fb095304d893b6a407f11c/raw/a72bf420e90f566ccd1435ef89b864d3db987a3a/gme_nft.json";
+let dataURL = "https://gist.githubusercontent.com/brian-houston/7ffd597a65fb095304d893b6a407f11c/raw/d928e02a6f81d4d405b1a2fc04df4f9c51f4e9d2/gme_nft.json";
 let data = await d3.json(dataURL);
 data.x = data.x.map(d => new Date(d));
 d3.blur(data.y, 50);
@@ -37,8 +37,6 @@ let xAxis = d3.axisBottom(xScale)
 let yAxis = d3.axisLeft(yScale)
   .ticks(7, d3.format('.1r'))
   .tickSizeOuter(0);
-
-console.log(volumeExtent)
 
 let svg = d3.create('svg')
   .attr('width', width)
