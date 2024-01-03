@@ -1,34 +1,8 @@
 import "../libraries/d3.v7.min.js";
-import {Legend} from "../libraries/legend.js"; let dataURL = "https://gist.githubusercontent.com/brian-houston/d13e40b76d06097e91e424ac56b81310/raw/660f88528c5ce513e572b2bc20105562009af159/538_nfl.csv";
-let dataURL2 = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv";
+import {Legend} from "../libraries/legend.js"; 
+import {load_nfl_data} from "../libraries/nfl_data.js";
 
-let data = await d3.csv(dataURL);
-let data2 = await d3.csv(dataURL2);
-
-data.forEach(d => {
-  d.season = parseInt(d.season);
-  d.decade = d.season - d.season % 10;
-  d.score1 = parseInt(d.score1);
-  d.score2 = parseInt(d.score2);
-  d.scores = [d.score1, d.score2].sort(d3.ascending);
-  d.strScore = 'S' + d.scores.join('to');
-});
-
-data2.forEach(d => {
-  d.season = parseInt(d.season);
-  d.decade = d.season - d.season % 10;
-  d.team1 = d.away_team;
-  d.team2 = d.home_team;
-  d.date = d.gameday;
-  d.score1 = parseInt(d.away_score);
-  d.score2 = parseInt(d.home_score);
-  d.scores = [d.score1, d.score2].sort(d3.ascending);
-  d.strScore = 'S' + d.scores.join('to');
-});
-
-data = d3.merge([data, data2])
-data = data.filter(d => !isNaN(d.scores[0]));
-
+let data = await load_nfl_data();
 let decadeExtent = d3.extent(data.map(d => d.season));
 
 let margins = {
