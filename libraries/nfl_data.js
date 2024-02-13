@@ -27,5 +27,18 @@ export async function load_nfl_data() {
 
   data[1] = data[1].filter(d => d.season >= 2023 && !isNaN(d.score1));
   data = data.flat() 
+  data = data.map(d => {
+    return {
+      season: d.season,
+      decade: d.decade,
+      date: d.date,
+      team1: d.team1 == 'OAK' ? 'LV' : d.team1,
+      team2: d.team2 == 'OAK' ? 'LV' : d.team2,
+      score1: d.score1,
+      score2: d.score2,
+      scores: d.scores,
+      strScore: d.strScore,
+    };
+  })
   return data
 }
