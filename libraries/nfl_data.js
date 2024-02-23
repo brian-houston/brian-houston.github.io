@@ -31,7 +31,7 @@ export async function load_nfl_data() {
     return {
       season: d.season,
       decade: d.decade,
-      date: d.date,
+      date: new Date(d.date),
       team1: d.team1 == 'OAK' ? 'LV' : d.team1,
       team2: d.team2 == 'OAK' ? 'LV' : d.team2,
       score1: d.score1,
