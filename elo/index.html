@@ -4,9 +4,19 @@
 <head>
   <meta charset="utf-8">
   <title>NFL Elo</title>
+  <style>
+    label {
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
+  <label for="teams"></label>
+
+  <select name="teams" id="teams">
+    <option value="volvo">Volvo</option>
+  </select>
   <p>
     Data before 2023 is from <a href="https://github.com/fivethirtyeight/data/tree/master/nfl-elo">fivethirtyeight</a>. 
     Data onwards is from <a href="https://github.com/nflverse/nfldata/blob/master/data/games.csv">nflverse</a>.

@@ -46,6 +46,11 @@ function calculate_elos(data, init_elo, k) {
     }
   }
 
+  // add 'end' to remaining team histories
+  for (const [key, value] of Object.entries(current_elos)) {
+    elos[key].push(elo_row(value, 'end', season_extent[1]));
+  }
+
   return elos;
 }
 
@@ -103,24 +108,33 @@ const height = 600;
 const margins = {
   top: 20,
   bottom: 20,
-  left: 20,
+  left: 40,
   right: 20,
 }
 
 const seasonExtent = d3.extent(data.map(d => d.season));
-const xScale = d3.scaleLinear(seasonExtent, [margins.left, width - margins.right]);
+const xScale = d3.scaleLinear([seasonExtent[0], seasonExtent[1] + 1], [0, width - margins.left - margins.right]);
 const yScale = d3.scaleLinear([initElo - 700, initElo + 700], [height-margins.bottom, margins.top]);
 const seasonScales = makeSeasonScales(elos);
 
 const svg = d3.create('svg')
   .attr('width', width)
   .attr('height', height)
-  .attr('preserveAspectRatio', 'none')
 
 const lineGenerator = makeLineGenerator(xScale, yScale, seasonScales);
 const polyGenerator = makePolyGenerator(xScale, yScale, seasonScales, initElo);
 
-svg.append('g')
+// chart area
+svg.append('svg')
+  .attr('preserveAspectRatio', 'none')
+  .attr('viewBox', '0 0 1000 600')
+  .attr('x', margins.left)
+  .attr('id', 'chartArea')
+
+// outline of elo histories
+svg.select('#chartArea')
+  .append('g')
+  .attr('id', 'outlines')
   .selectAll('path')
   .data(Object.values(elos))
   .join('path')
@@ -129,5 +143,46 @@ svg.append('g')
   .attr('stroke', 'none')
   .attr('stroke-width', 2)
 
+// paths of elo histories
+// 1 path per team
+svg.select('#chartArea')
+  .append('g')
+  .attr('id', 'paths')
+  .selectAll('path')
+  .data(Object.entries(elos))
+  .join('path')
+  .attr('d', d => lineGenerator(d[1]))
+  .attr('class', d => d[0])
+  .attr('fill', 'none')
+  .attr('stroke', 'steelblue')
+  .attr('vector-effect', 'non-scaling-stroke')
+  .attr('stroke-width', 2)
+  .attr('visibility', 'hidden')
+
+// x-axis
+svg.append('g')
+  .attr('transform', `translate(${margins.left}, ${height - margins.bottom})`)
+  .call(d3.axisBottom(xScale))
+
+// y-axis
+svg.append('g')
+  .attr('transform', `translate(${margins.left}, 0)`)
+  .call(d3.axisLeft(yScale))
+
+d3.select('#teams')
+  .selectAll('option')
+  .data(Object.keys(elos))
+  .join('option')
+  .text(d => d)
+
+const teamSelectInput = document.getElementById('teams');
+let selectedTeam = 'NONE';
+teamSelectInput.addEventListener('change', (e) => {
+  d3.selectAll(`.${selectedTeam}`)
+    .attr('visibility', 'hidden');
+  selectedTeam = e.target.value;
+  d3.selectAll(`.${selectedTeam}`)
+    .attr('visibility', 'visible');
+})
 
 document.body.prepend(svg.node());
