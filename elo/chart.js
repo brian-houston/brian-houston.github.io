@@ -95,11 +95,12 @@ svg.select('#chartArea')
 
 // paths of elo histories
 // 1 path per team
+// data formatted as [[team1, elos1], [team2, elos2], ...]
 svg.select('#chartArea')
   .append('g')
   .attr('id', 'paths')
   .selectAll('path')
-  .data(Object.entries(elos))
+  .data(activeTeams.map(d => [d, elos[d]])) 
   .join('path')
   .attr('d', d => lineGenerator(d[1]))
   .attr('class', d => d[0])
@@ -111,11 +112,13 @@ svg.select('#chartArea')
 
 // x-axis
 svg.append('g')
+  .attr('id', 'gx')
   .attr('transform', `translate(0, ${height - margins.bottom})`)
   .call(d3.axisBottom(xScale))
 
 // y-axis
 svg.append('g')
+  .attr('id', 'gy')
   .attr('transform', `translate(${margins.left}, 0)`)
   .call(d3.axisLeft(yScale))
 
@@ -136,10 +139,16 @@ teamSelectInput.addEventListener('change', (e) => {
     .attr('visibility', 'visible');
 })
 
-function rsOnDrag(range) {
-  range = range.map(d => xScale(d))
+function rsOnDrag(domain) {
+  const range = domain.map(d => xScale(d))
   d3.select('#chartArea')
     .attr('viewBox', `${range[0]} 0 ${range[1] - range[0]} ${height}`)
+  const xScaleNew = d3.scaleLinear(domain, xScale.range());
+  d3.select('#gx')
+    .transition()
+    .duration(1)
+    .call(d3.axisBottom(xScaleNew));
+    
 }
 
 const rsHeight = 70;
