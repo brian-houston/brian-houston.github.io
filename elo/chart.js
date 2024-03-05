@@ -125,7 +125,7 @@ svg.append('g')
 // add teams to drop down menu
 d3.select('#teams')
   .selectAll('option')
-  .data(activeTeams)
+  .data(d3.sort(activeTeams, d3.ascending))
   .join('option')
   .text(d => d)
 
