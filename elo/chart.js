@@ -130,7 +130,8 @@ d3.select('#teams')
   .text(d => d)
 
 const teamSelectInput = document.getElementById('teams');
-let selectedTeam = 'NONE';
+
+let selectedTeam = 'CAR';
 teamSelectInput.addEventListener('change', (e) => {
   d3.selectAll(`.${selectedTeam}`)
     .attr('visibility', 'hidden');
@@ -157,7 +158,16 @@ const rsMargins = {
   bottom: 20,
 };
 
+// scale for selecting season range to display
 const rs = makeRangeSelector(xScale, width, rsHeight, rsMargins, rsOnDrag);
 
 document.body.prepend(rs.node());
 document.body.prepend(svg.node());
+
+// make default option visible
+d3.selectAll(`.${selectedTeam}`)
+  .attr('visibility', 'visible');
+d3.selectAll('#teams option')
+  .filter(d => d == selectedTeam)
+  .attr('selected', '')
+
