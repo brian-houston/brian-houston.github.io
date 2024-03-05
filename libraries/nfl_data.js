@@ -1,6 +1,12 @@
 const dataURL1 = "https://gist.githubusercontent.com/brian-houston/d13e40b76d06097e91e424ac56b81310/raw/660f88528c5ce513e572b2bc20105562009af159/538_nfl.csv";
 const dataURL2 = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv";
 
+const teamCorrections = {
+  'OAK': 'LV',
+  'WAS': 'WSH',
+  'LA': 'LAR',
+}
+
 export async function load_nfl_data() {
   let data = await Promise.all([d3.csv(dataURL1), d3.csv(dataURL2)]);
 
@@ -32,8 +38,8 @@ export async function load_nfl_data() {
       season: d.season,
       decade: d.decade,
       date: new Date(d.date),
-      team1: d.team1 == 'OAK' ? 'LV' : d.team1,
-      team2: d.team2 == 'OAK' ? 'LV' : d.team2,
+      team1: d.team1 in teamCorrections ? teamCorrections[d.team1] : d.team1,
+      team2: d.team2 in teamCorrections ? teamCorrections[d.team2] : d.team2,
       score1: d.score1,
       score2: d.score2,
       scores: d.scores,
