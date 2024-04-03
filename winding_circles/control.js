@@ -1,4 +1,4 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import "../utilities/d3.v7.min.js";
 import * as model from "./model.js";
 
 let colors = [[0, 0, 0, 255]];

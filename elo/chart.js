@@ -1,7 +1,7 @@
-import '../libraries/d3.v7.min.js';
-import {load_nfl_data} from '../libraries/nfl_data.js';
+import '../utilities/d3.v7.min.js';
+import {load_nfl_data} from '../utilities/nfl_data.js';
 import {calcEloData} from './calc_elo.js'
-import {makeRangeSelector} from '../libraries/range_selector.js'
+import {makeRangeSelector} from '../utilities/range_selector.js'
 
 function makeSeasonScales(date) {
   let seasonScales = {};

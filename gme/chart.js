@@ -1,4 +1,4 @@
-import "../libraries/d3.v7.min.js";
+import "../utilities/d3.v7.min.js";
 let dataURL = "https://gist.githubusercontent.com/brian-houston/7ffd597a65fb095304d893b6a407f11c/raw/d928e02a6f81d4d405b1a2fc04df4f9c51f4e9d2/gme_nft.json";
 let data = await d3.json(dataURL);
 data.x = data.x.map(d => new Date(d));
