@@ -1,5 +1,5 @@
-import "../libraries/d3.v7.min.js";
-import {load_nfl_data} from "../libraries/nfl_data.js";
+import "../utilities/d3.v7.min.js";
+import {load_nfl_data} from "../utilities/nfl_data.js";
 
 let data = await load_nfl_data();
 let dict = d3.group(data, d => d.strScore);

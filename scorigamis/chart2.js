@@ -12,7 +12,7 @@ const width = 1000;
 const seasonExtent = d3.extent(data.map(d => d.season));
 const colorScale = d3.scaleSequential(seasonExtent, 
   d => d3.color(d3.interpolateSpectral(d)).darker(0.2));
-const svg = makeScorigamiChart({width: width, data: data, colorScale: d => colorScale(d.season)});
+const [svg, _] = makeScorigamiChart({width: width, data: data, colorScale: d => colorScale(d.season)});
 
 const colorLegend = Legend(colorScale,
   {
