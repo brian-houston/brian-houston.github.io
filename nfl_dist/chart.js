@@ -1,10 +1,10 @@
 
 import "../utilities/d3.v7.min.js";
 import {Legend} from "../utilities/legend.js";
-import {loadNFLData} from "../utilities/nfl_data.js";
+import {loadNflData} from "../utilities/nfl_data.js";
 import {makeScorigamiChart} from "../utilities/scorigami_chart.js" 
 
-let data = await loadNFLData();
+let data = await loadNflData();
 
 const colorScale = d3.scaleSequentialLog([1, 30], t => d3.color(d3.interpolateGnBu(t)).darker(0.2));
 const [svg, updateChart] = makeScorigamiChart({

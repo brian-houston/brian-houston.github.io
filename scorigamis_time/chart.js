@@ -1,7 +1,7 @@
 import "../utilities/d3.v7.min.js";
-import {loadNFLData} from "../utilities/nfl_data.js";
+import {loadNflData} from "../utilities/nfl_data.js";
 
-let data = await loadNFLData();
+let data = await loadNflData();
 let dict = d3.group(data, d => d.strScore);
 let scorigamis = [...dict.values()].map(d => d[0]);
 
