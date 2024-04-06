@@ -7,7 +7,7 @@ const teamCorrections = {
   'LA': 'LAR',
 }
 
-export async function load_nfl_data() {
+export async function loadNFLData() {
   let data = await Promise.all([d3.csv(dataURL1), d3.csv(dataURL2)]);
 
   data[0].forEach(d => {
