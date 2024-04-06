@@ -1,4 +1,4 @@
-import "../libraries/d3.v7.min.js";
+import "../utilities/d3.v7.min.js";
 
 export function makeRangeSelector(scale, width, height, margins, onDrag) {
   const svg = d3.create('svg')

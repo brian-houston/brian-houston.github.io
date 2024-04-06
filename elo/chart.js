@@ -1,5 +1,5 @@
 import '../utilities/d3.v7.min.js';
-import {load_nfl_data} from '../utilities/nfl_data.js';
+import {loadNFLData} from '../utilities/nfl_data.js';
 import {calcEloData} from './calc_elo.js'
 import {makeRangeSelector} from '../utilities/range_selector.js'
 
@@ -47,7 +47,7 @@ function makePolyGenerator(xScale, yScale, seasonScales, initElo) {
   }
 }
 
-const data = await load_nfl_data();
+const data = await loadNFLData();
 const initElo = 1000;
 const kElo = 50;
 const [elos, activeTeams, highs, lows] = calcEloData(data, initElo, kElo);
