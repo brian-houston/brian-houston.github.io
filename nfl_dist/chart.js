@@ -7,7 +7,11 @@ import {makeScorigamiChart} from "../utilities/scorigami_chart.js"
 let data = await load_nfl_data();
 
 const colorScale = d3.scaleSequentialLog([1, 30], t => d3.color(d3.interpolateGnBu(t)).darker(0.2));
-const [svg, updateChart] = makeScorigamiChart({data: data, colorScale: d => colorScale(d.count)});
+const [svg, updateChart] = makeScorigamiChart({
+  data: data, 
+  title: 'NFL Score Distribution',
+  colorScale: d => colorScale(d.count)
+});
 
 const colorLegend = Legend(colorScale,
   {
