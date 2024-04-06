@@ -7,7 +7,6 @@ export function makeScorigamiChart({
   yScaleLabel = 'Losing Score',
   data = null,
   colorScale = (d) => 'steelblue',
-  animationDuration = 200 
 } = {}) {
   
   if (!data) {
@@ -84,13 +83,6 @@ export function makeScorigamiChart({
   svg.append('g')
     .attr('id', 'scori-squares')
     .selectAll('rect')
-    .data(data, d => d.strScore)
-    .join('rect')
-    .attr('width', xScale.bandwidth())
-    .attr('height', yScale.bandwidth())
-    .attr('x', d => xScale(d.scores[1]))
-    .attr('y', d => yScale(d.scores[0]))
-    .attr('fill', d => colorScale(d))
 
   let titleStartX = margins.left + 25;
   let titleStartY = margins.top + 65;
@@ -123,7 +115,7 @@ export function makeScorigamiChart({
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'hanging')
 
-  function updateScorigamiChart(data) {
+  function updateScorigamiChart(data, animationDuration = 200) {
     svg.select('#scori-squares')
       .selectAll('rect')
       .data(data, d => d.strScore)
